@@ -48,7 +48,7 @@ description: 用 Key-X 安全管理项目密钥/密码：新密钥接入、存�
    ```
 
    （存量 Node 项目也可写进 `.env`：`OPENAI_API_KEY=kx_xxxxxxxx`）
-3. 首次在该项目使用时 `keyx run` 会询问信任（用户按 y）；也可提前执行 `keyx trust add kx_xxx`。
+3. 首次解析前先建立项目信任：`keyx trust add kx_xxx`（你代跑即可——AI 环境里 `keyx run` 的交互确认读不到 stdin，会直接取消）。人工终端里跑 `keyx run` 的人也可以在询问时按一次 y，效果相同。
 4. 启动一律加前缀：`keyx run <启动命令>` —— 它自动解析 `.keyx.toml [env]` 与 `.env` 里的 kx_* 引用并注入环境变量。
 
 ## 工作流 B · 存量明文轮换（五步，顺序不可乱）
@@ -61,7 +61,7 @@ description: 用 Key-X 安全管理项目密钥/密码：新密钥接入、存�
    - 用户在源头（云控制台/数据库）发新值；
    - 用户终端运行 `keyx set <名称>` 存新值（条目已存在则 `keyx rotate kx_xxx`，编号不变）；
    - 你把配置中的引用替换为新 kx_ 编号；
-   - **验证门**：你运行 `keyx run <启动命令>`（或项目的测试/健康检查）确认新值可用——验证未通过，禁止进入下一步；
+   - **验证门**：首次解析先 `keyx trust add <新编号>`，然后你运行 `keyx run <启动命令>`（或项目的测试/健康检查）确认新值可用——验证未通过，禁止进入下一步；
    - 用户在源头撤销旧值 → 该 key 标记 HEALTHY。
 4. git 历史中的旧明文无需处理——旧值已死，历史自动变成死字符。
 
@@ -81,7 +81,7 @@ description: 用 Key-X 安全管理项目密钥/密码：新密钥接入、存�
 1. 告诉用户去哪发新值（具体到控制台页面/SQL），等用户回复"好了"；
 2. 让用户在自己的终端运行 `keyx set <名称>`；
 3. 你 `keyx list` 取编号，把文件里的明文位置替换为 kx_ 引用；
-4. **验证门**：`keyx run <启动命令>` 或项目测试通过——不过关，不得进入下一条，先排查引用/名称是否写错；
+4. **验证门**：首次解析先 `keyx trust add <编号>`，再 `keyx run <启动命令>` 或项目测试通过——不过关，不得进入下一条，先排查引用/名称是否写错；
 5. 让用户在源头撤销旧值 → 清单该行标 HEALTHY。
 
 源头无法发新值的条目：标"无法轮换"，建议服务端代理隔离，移出本次范围，并向用户明说残留风险，不许悄悄略过。
@@ -103,6 +103,7 @@ description: 用 Key-X 安全管理项目密钥/密码：新密钥接入、存�
   - macOS / Linux：`curl -fsSL https://raw.githubusercontent.com/elonsolar/key-x/main/install.sh | bash`
   - Windows (PowerShell)：`irm https://raw.githubusercontent.com/elonsolar/key-x/main/install.ps1 | iex`
 - 安装脚本只装二进制并挂 PATH；本 skill 由 `npx skills add` 单独安装，两者互不依赖。
+- 安装命令从 GitHub Releases 下载产物：若报 404（还没打过 release），回退源码构建——克隆 `elonsolar/key-x` 后 `cargo build --release`，把 `target/release/keyx` 链进 PATH。
 - 用户重开终端（或重新加载 PATH）后继续。首条 `keyx set` 会自动创建密库（钥匙串模式，无需注册任何账号密码）。
 
 ## 命令速查
@@ -116,6 +117,8 @@ keyx run <命令>              # 解析引用并注入环境变量后启动
 keyx trust list|add|rm       # 项目授权
 keyx audit -n 20             # 审计（RESOLVE/DENY/ROTATE/…）
 keyx status|lock|unlock|stop # 状态与生命周期
+keyx rm kx_xxx                # 删除一条
+keyx keychain-reset           # 清除钥匙串主密钥（确认旧密库废弃后使用）
 keyx export -o f.json / import f.json   # 加密备份（密文）
 ```
 
