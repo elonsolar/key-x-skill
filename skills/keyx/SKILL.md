@@ -40,6 +40,7 @@ description: 用 Key-X 安全管理项目密钥/密码：新密钥接入、存�
 
 1. 对用户说："请在你的终端运行 `keyx set <名称>`（例如 `keyx set openai-prod`），输入密码即可"。随后自己运行 `keyx list` 取回编号——用户零粘贴（发来编号也无妨，只有明文危险）。
    若用户说明了用途/环境，让用户带上备注：`keyx set openai-prod --url https://platform.openai.com --notes "生产环境，走公司主账号"`——三个月后"这是哪个 key"就靠它回答。
+   一个项目多条密码时，名称用 `<项目>-<用途>` 前缀（`imgrelay-admin`、`imgrelay-secret`），`keyx list imgrelay` 即可按项目归组查看。
 2. 拿到编号后写入项目 `.keyx.toml`：
 
    ```toml
@@ -110,7 +111,7 @@ description: 用 Key-X 安全管理项目密钥/密码：新密钥接入、存�
 
 ```bash
 keyx set <名称>              # 存入 → 输出 kx_ 编号
-keyx list                    # 列表（无明文）
+keyx list [过滤词]           # 列表（无明文）；按名称/备注过滤归组，如 keyx list imgrelay
 keyx peek <编号或名称>        # 弹窗查看/复制（用户要取回密码时让用户自己跑；值只进剪贴板/弹窗，AI 拿不到）
 keyx rotate kx_xxx           # 同编号换值（引用零改动）
 keyx run <命令>              # 解析引用并注入环境变量后启动
