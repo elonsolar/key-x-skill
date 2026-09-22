@@ -9,7 +9,7 @@
 npx skills add elonsolar/key-x-skill     # 自动装进检测到的 agent（Claude Code/Cursor/Codex/OpenCode…）
 ```
 
-没有技能机制的引擎：把 [`skills/keyx-keys/AGENTS-SNIPPET.md`](skills/keyx-keys/AGENTS-SNIPPET.md) 粘进项目的 `AGENTS.md` / `.cursorrules`。
+没有技能机制的引擎：把 [`skills/keyx/AGENTS-SNIPPET.md`](skills/keyx/AGENTS-SNIPPET.md) 粘进项目的 `AGENTS.md` / `.cursorrules`。
 
 还需要 keyx 二进制本体（缺了 AI 会引导你装）：
 
@@ -20,7 +20,7 @@ irm  https://raw.githubusercontent.com/elonsolar/key-x/main/install.ps1 | iex   
 
 ## 有几个技能，怎么触发
 
-当前 **1 个技能：`keyx-keys`**，内含三类东西，触发方式不同：
+当前 **1 个技能：`keyx`**，内含三类东西，触发方式不同：
 
 | 类型 | 内容 | 怎么触发 |
 |---|---|---|
@@ -62,8 +62,8 @@ AI 让你自己跑 `keyx peek <编号或名称>`——系统弹窗确认，值�
 ## 仓库结构
 
 ```
-skills/keyx-keys/SKILL.md            # 技能本体
-skills/keyx-keys/AGENTS-SNIPPET.md   # 无技能机制引擎的精简版
+skills/keyx/SKILL.md            # 技能本体
+skills/keyx/AGENTS-SNIPPET.md   # 无技能机制引擎的精简版
 ```
 
 符合 [skills CLI](https://github.com/vercel-labs/skills) 的发现规范（`skills/<name>/SKILL.md`）。
