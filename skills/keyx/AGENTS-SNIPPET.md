@@ -16,9 +16,10 @@
 4. 永不把明文写入任何文件；不 cat .env / printenv / grep 密码；扫描输出只报 文件:行号 + 变量名。
 5. 启动项目一律 `keyx run <命令>`——明文只进子进程环境变量，不进对话、不落盘。
    首次解析前先 `keyx trust add <编号>`（AI 代办；交互询问在 agent 环境读不到 stdin 会直接取消）。
-6. 用户要取回密码：让用户自己跑 `keyx peek <编号或名称>`（系统弹窗确认，值只进剪贴板，45 秒自动清空）。
+6. 用户要取回密码：让用户自己跑 `keyx peek <编号或名称>`（系统弹窗确认，值只进剪贴板，45 秒自动清空；SSH/无桌面由用户在终端回车确认后仅复制，AI 管道调用报 PEEK_NO_GUI 拒绝）。
 7. kx_ 编号是机器本地的：把 `.keyx.toml` 加进 `.gitignore`；团队各自 `keyx set` 建条目、写自己的映射。
 8. 零侵入：不把 `keyx run` 写进 package.json scripts / Dockerfile / CI 等共享文件——运行时敲；仅当用户明确要求团队统一使用 keyx 时才写入。
+9. 任意 keyx 命令 stderr 出现「daemon 还是 v…请运行 keyx stop」：后台 daemon 是升级前的旧进程（旧逻辑仍在跑），`keyx stop` 后重跑命令即可（自动拉起新 daemon），不要忽略。
 
 冷启动：先跑 `keyx --version`；没有就装——
 macOS/Linux: `curl -fsSL https://raw.githubusercontent.com/elonsolar/key-x/main/install.sh | bash`

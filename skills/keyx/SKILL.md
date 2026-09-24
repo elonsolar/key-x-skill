@@ -100,6 +100,7 @@ description: 用 Key-X 安全管理项目密钥/密码：新密钥接入、存�
 会话中任何一步依赖 keyx 前，先握手：运行 `keyx --version`。
 
 - 有输出 → 继续。本 skill（v1）兼容 keyx ≥ 1.3；版本过低时提示用户升级：`curl -fsSL https://raw.githubusercontent.com/elonsolar/key-x/main/install.sh | bash`。
+- 运行 keyx 命令时 stderr 若出现「daemon 还是 vX（当前 CLI vY）…请运行 keyx stop」：说明后台 daemon 是升级前的旧进程（旧逻辑仍在跑），直接运行 `keyx stop` 再重跑刚才的命令即可——会自动拉起新 daemon。看到就处理，不要忽略。
 - `command not found` → **你就是安装器**。按用户平台给一条命令，装好后从反射一继续：
   - macOS / Linux：`curl -fsSL https://raw.githubusercontent.com/elonsolar/key-x/main/install.sh | bash`
   - Windows (PowerShell)：`irm https://raw.githubusercontent.com/elonsolar/key-x/main/install.ps1 | iex`
@@ -112,7 +113,7 @@ description: 用 Key-X 安全管理项目密钥/密码：新密钥接入、存�
 ```bash
 keyx set <名称>              # 存入 → 输出 kx_ 编号
 keyx list [过滤词]           # 列表（无明文）；按名称/备注过滤归组，如 keyx list imgrelay
-keyx peek <编号或名称>        # 弹窗查看/复制（用户要取回密码时让用户自己跑；值只进剪贴板/弹窗，AI 拿不到）
+keyx peek <编号或名称>        # 弹窗查看/复制（用户要取回密码时让用户自己跑；值只进剪贴板/弹窗，AI 拿不到；无桌面时用户终端回车确认仅复制，AI 管道调用拒绝）
 keyx rotate kx_xxx           # 同编号换值（引用零改动）
 keyx run <命令>              # 解析引用并注入环境变量后启动
 keyx trust list|add|rm       # 项目授权
