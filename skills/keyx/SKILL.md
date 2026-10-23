@@ -119,7 +119,7 @@ keyx run <命令>              # 解析引用并注入环境变量后启动
 keyx trust list|add|rm       # 项目授权
 keyx audit -n 20             # 审计（RESOLVE/DENY/ROTATE/…）
 keyx status|lock|unlock|stop # 状态与生命周期
-keyx update [--check]        # 自更新到最新 Release（--check 只检查）；命令提示「有新版」时直接跑
+keyx update [--check]        # 手动升级（daemon 锁定态本就自动升级；解锁态提示时用它立即升）
 keyx rm kx_xxx                # 删除一条
 keyx keychain-reset           # 清除钥匙串主密钥（确认旧密库废弃后使用）
 keyx export -o f.json / import f.json   # 加密备份（密文）
